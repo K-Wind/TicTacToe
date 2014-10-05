@@ -44,24 +44,64 @@ public class TicTacToe {
             System.out.println("Player " + player + " wins!");
         }
     }
-    
-    public void doAlphaBeta(){
+
+    public void doAlphaBeta() {
         /*If node is a leaf
-            return static value
-          If node is MAX
-            While a < b
-            V=value of next childnode.AlphaBeta(á, â)
-            If V > a let a = V
-            return a
-          If node is MIN
-            While a < b
-            V=value of next childnode.AlphaBeta(á, â)
-            If V < b let b = V
-            return b*/
+         return static value
+         If node is MAX
+         While a < b
+         V=value of next childnode.AlphaBeta(á, â)
+         If V > a let a = V
+         return a
+         If node is MIN
+         While a < b
+         V=value of next childnode.AlphaBeta(á, â)
+         If V < b let b = V
+         return b*/
     }
-    
-    public int alphabetaAlg(int alpha, int beta){
+
+    public int alphabetaAlg(int alpha, int beta, int depth, int[][] tempBoard) {
+        if (depth == 9) {
+            return calculateValue(tempBoard);
+        } else if (alpha < beta) {
+            int d = 0;
+            for (int[] h : tempBoard) {
+                for (int w : h) {
+                    if (tempBoard[d][w] == 0) {
+                        if (depth % 2 == 0) {
+                            tempBoard[d][w] = 1;
+                        } else {
+                            tempBoard[d][w] = 2;
+                        }
+                        int v = alphabetaAlg(alpha, beta, depth + 1, tempBoard);
+                        if (depth % 2 == 0) {
+                            if(v > alpha){
+                                alpha = v;
+                            }
+                            return alpha;
+                        } else {
+                            if(v < alpha){
+                                beta = v;
+                            }
+                            return beta;
+                        }
+                    }
+                }
+                d++;
+            }
+        }
         return 0;
+    }
+
+    private int calculateValue(int[][] board) {
+        int state = gameState(board);
+        if (state == 1) {
+            return -100;
+        } else if (state == 2) {
+            return 100;
+        } else {
+            return 0;
+        }
     }
 
     public boolean doMove(int player, int x, int y) {
@@ -73,7 +113,7 @@ public class TicTacToe {
         }
     }
 
-    public int gameOver() {
+    public int gameState(int[][] board) {
         for (int i = 0; i < 3; i++) {
             if (board[i][0] != 0) {
                 if (board[i][0] == board[i][1] && board[i][0] == board[i][2]) {
